@@ -1,0 +1,72 @@
+# TexJEPA-C: covariance-regularized texture consistency.
+#
+# Warm-start from TexJEPA-N and train for 50 additional epochs. TexJEPA-C keeps
+# the TexJEPA-N asymmetric context corruption objective and adds a mild
+# patch-level variance/covariance auxiliary loss. The auxiliary term discourages
+# patch-token collapse and preserves diversity in local chest texture features.
+
+data:
+  dataset_type: mimic_cxr
+  root_path: data/mimic-cxr-384
+  use_zip: false
+  splits: null
+  batch_size: 128
+  crop_size: 224
+  crop_scale: [0.3, 1.0]
+  num_workers: 10
+  pin_mem: true
+  normalization: chest_xray
+  use_color_distortion: false
+  use_gaussian_blur: false
+  use_horizontal_flip: false
+  color_jitter_strength: 0.0
+  context_noise:
+    enabled: true
+    p_gauss: 0.5
+    p_poisson: 0.3
+    p_jpeg: 0.2
+    sigma_range: [0.005, 0.05]
+    peak_range: [50, 200]
+    quality_range: [40, 80]
+    warmup_epochs: 5
+
+logging:
+  folder: logs/texjepa_c
+  write_tag: jepa
+
+mask:
+  allow_overlap: false
+  aspect_ratio: [0.75, 1.5]
+  enc_mask_scale: [0.85, 1.0]
+  min_keep: 10
+  num_enc_masks: 1
+  num_pred_masks: 4
+  patch_size: 14
+  pred_mask_scale: [0.15, 0.2]
+
+meta:
+  load_checkpoint: true
+  model_name: vit_huge
+  patch_size: 14
+  pred_depth: 12
+  pred_emb_dim: 384
+  read_checkpoint: ../texjepa_n/jepa-latest.pth.tar
+  use_bfloat16: true
+  num_registers: 0
+
+optimization:
+  ema: [0.999, 1.0]
+  epochs: 50
+  final_lr: 1.0e-06
+  final_weight_decay: 0.4
+  ipe_scale: 1.25
+  lr: 3.0e-05
+  start_lr: 1.0e-06
+  warmup: 3
+  weight_decay: 0.04
+  vicreg:
+    enabled: true
+    var_weight: 1.0
+    cov_weight: 0.04
+    gamma: 1.0
+    warmup_epochs: 5

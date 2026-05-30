@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+
+# Data and generated artifacts
+data/
+logs/
+checkpoints/
+pretrained_weights/
+downstream_results/
+wandb/
+runs/
+*.pth
+*.pth.tar
+*.pt
+*.ckpt
+*.npz
+*.npy
+*.zip
+*.tar
+*.tar.gz
+
+# Local/editor files
+.DS_Store
+.vscode/
+.idea/
+*.log
+nohup.out
