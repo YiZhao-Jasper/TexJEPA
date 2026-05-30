@@ -20,6 +20,55 @@ The released training sequence is:
 
 The public names are the only names used in this release. Checkpoints and training logs should be reported with these names.
 
+## Model Zoo
+
+All released checkpoints are hosted on Hugging Face:
+
+**Model repository:** [YiZhaoJasper/TexJEPA](https://huggingface.co/YiZhaoJasper/TexJEPA)
+
+| Model | Checkpoint | Training lineage | Recommended use |
+| --- | --- | --- | --- |
+| **I-JEPA-300** | [`weights/I-JEPA-300/jepa-latest.pth.tar`](https://huggingface.co/YiZhaoJasper/TexJEPA/blob/main/weights/I-JEPA-300/jepa-latest.pth.tar) | 300-epoch I-JEPA ViT-H/14 baseline | Clean baseline for ablation, comparison, and texture-sensitivity analysis |
+| **TexJEPA-N** | [`weights/TexJEPA-N/jepa-latest.pth.tar`](https://huggingface.co/YiZhaoJasper/TexJEPA/blob/main/weights/TexJEPA-N/jepa-latest.pth.tar) | I-JEPA-300 + 50 epochs | Texture-noise robustness and the default TexJEPA specialization |
+| **TexJEPA-R** | [`weights/TexJEPA-R/jepa-latest.pth.tar`](https://huggingface.co/YiZhaoJasper/TexJEPA/blob/main/weights/TexJEPA-R/jepa-latest.pth.tar) | TexJEPA-N + 50 epochs | Register-token routing experiments and local artifact analysis |
+| **TexJEPA-C** | [`weights/TexJEPA-C/jepa-latest.pth.tar`](https://huggingface.co/YiZhaoJasper/TexJEPA/blob/main/weights/TexJEPA-C/jepa-latest.pth.tar) | TexJEPA-N + 50 epochs | Patch diversity, covariance regularization, and lesion-scale texture studies |
+
+Download the model repository:
+
+```bash
+python -m pip install -U huggingface_hub
+hf download YiZhaoJasper/TexJEPA --repo-type model --local-dir checkpoints/texjepa
+```
+
+Place or symlink the checkpoints to the paths expected by the public configs:
+
+```bash
+mkdir -p logs/ijepa_300 logs/texjepa_n logs/texjepa_r logs/texjepa_c
+
+ln -sf "$(pwd)/checkpoints/texjepa/weights/I-JEPA-300/jepa-latest.pth.tar" \
+  logs/ijepa_300/jepa-latest.pth.tar
+ln -sf "$(pwd)/checkpoints/texjepa/weights/TexJEPA-N/jepa-latest.pth.tar" \
+  logs/texjepa_n/jepa-latest.pth.tar
+ln -sf "$(pwd)/checkpoints/texjepa/weights/TexJEPA-R/jepa-latest.pth.tar" \
+  logs/texjepa_r/jepa-latest.pth.tar
+ln -sf "$(pwd)/checkpoints/texjepa/weights/TexJEPA-C/jepa-latest.pth.tar" \
+  logs/texjepa_c/jepa-latest.pth.tar
+```
+
+For downstream evaluation, point `CHECKPOINT` to any one of the four released checkpoints:
+
+```bash
+export CHECKPOINT=logs/texjepa_n/jepa-latest.pth.tar
+bash downstream/run_downstream.sh all
+```
+
+Verify downloaded weights with the SHA-256 file in the model repository:
+
+```bash
+cd checkpoints/texjepa
+shasum -a 256 -c checksums.sha256
+```
+
 ## Repository Layout
 
 ```text
@@ -188,7 +237,7 @@ TexJEPA-C adds a local patch-token variance/covariance auxiliary loss. The loss 
 
 Use the public config names and checkpoint directories when reporting results. The repository excludes raw MIMIC-CXR-JPG, derived 384-pixel caches, model checkpoints, and downstream predictions because these artifacts are large or governed by third-party data-use terms.
 
-If releasing trained weights, place them outside the Git repository, for example on GitHub Releases or a model-hosting service, and preserve the four checkpoint names listed above.
+Released weights are provided through the Hugging Face Model Zoo above. Keep the same public model names and checkpoint paths when reporting or reproducing experiments.
 
 ## Citation
 
