@@ -1,6 +1,6 @@
 # TexJEPA-N: noise-invariant texture adaptation.
 #
-# Warm-start from the 200-epoch I-JEPA base checkpoint and train for 50 more
+# Warm-start from the I-JEPA-300 baseline checkpoint and train for 50 more
 # epochs. The target branch sees clean chest radiographs while the context
 # branch receives mild stochastic texture corruptions. This asymmetric
 # context-target view teaches invariance to nuisance texture while preserving
@@ -51,7 +51,7 @@ meta:
   patch_size: 14
   pred_depth: 12
   pred_emb_dim: 384
-  read_checkpoint: ../ijepa_base_200ep/jepa-latest.pth.tar
+  read_checkpoint: ../ijepa_300/jepa-latest.pth.tar
   use_bfloat16: true
   num_registers: 0
 

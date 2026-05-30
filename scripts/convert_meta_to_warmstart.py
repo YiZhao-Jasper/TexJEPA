@@ -18,7 +18,7 @@ pretrained representation.
 Usage:
     python scripts/convert_meta_to_warmstart.py \
         --in  checkpoints/IN22K-vit.h.14-900e.pth.tar \
-        --out logs/ijepa_base_200ep/jepa-latest.pth.tar
+        --out logs/ijepa_300/jepa-latest.pth.tar
 """
 
 import argparse

@@ -13,8 +13,8 @@ The released training sequence is:
 
 | Public name | Initialization | Training length | Main change |
 | --- | --- | ---: | --- |
-| I-JEPA base | none in the default public config | 200 epochs | Standard I-JEPA objective on MIMIC-CXR-JPG |
-| TexJEPA-N | I-JEPA base checkpoint | 50 epochs | Context-only stochastic texture corruption; clean target branch |
+| I-JEPA-300 | none in the default public config | 300 epochs | Standard I-JEPA objective on MIMIC-CXR-JPG |
+| TexJEPA-N | I-JEPA-300 checkpoint | 50 epochs | Context-only stochastic texture corruption; clean target branch |
 | TexJEPA-R | TexJEPA-N checkpoint | 50 epochs | Register-token encoder plus tighter local masks |
 | TexJEPA-C | TexJEPA-N checkpoint | 50 epochs | Patch-token variance/covariance regularization |
 
@@ -30,7 +30,7 @@ scripts/                       # Data preprocessing, launch, smoke, and sanity c
 src/datasets/                  # MIMIC-CXR-JPG pre-training dataset
 src/masks/                     # Multi-block I-JEPA mask collator
 src/models/                    # ViT, predictor, and register-token ViT
-src/pretrain.py                # 200-epoch I-JEPA base training loop
+src/pretrain.py                # I-JEPA-300 baseline training loop
 src/pretrain_v2.py             # TexJEPA-N/R/C specialization loop
 src/perturbations_pretrain.py  # Context-only texture perturbations
 src/vicreg_patch.py            # Patch variance/covariance regularization
@@ -84,7 +84,7 @@ The pre-training configs read `data/mimic-cxr-384` by default.
 
 ## Pre-training
 
-Run the common 200-epoch I-JEPA base:
+Run the common I-JEPA-300 baseline:
 
 ```bash
 DEVICES="cuda:0 cuda:1" bash scripts/pretrain_base.sh
@@ -106,7 +106,7 @@ DEVICES="cuda:0 cuda:1" bash scripts/train_texjepa_c.sh
 The checkpoint paths encoded in the public configs are:
 
 ```text
-logs/ijepa_base_200ep/jepa-latest.pth.tar
+logs/ijepa_300/jepa-latest.pth.tar
 logs/texjepa_n/jepa-latest.pth.tar
 logs/texjepa_r/jepa-latest.pth.tar
 logs/texjepa_c/jepa-latest.pth.tar
@@ -115,7 +115,7 @@ logs/texjepa_c/jepa-latest.pth.tar
 The specialization configs use relative `read_checkpoint` paths so the lineage is explicit:
 
 ```text
-TexJEPA-N <- logs/ijepa_base_200ep/jepa-latest.pth.tar
+TexJEPA-N <- logs/ijepa_300/jepa-latest.pth.tar
 TexJEPA-R <- logs/texjepa_n/jepa-latest.pth.tar
 TexJEPA-C <- logs/texjepa_n/jepa-latest.pth.tar
 ```
@@ -127,7 +127,7 @@ If a researcher uses Meta's official ImageNet-22K I-JEPA ViT-H/14 checkpoint as 
 ```bash
 python scripts/convert_meta_to_warmstart.py \
   --in checkpoints/IN22K-vit.h.14-900e.pth.tar \
-  --out logs/ijepa_base_200ep/jepa-latest.pth.tar
+  --out logs/ijepa_300/jepa-latest.pth.tar
 ```
 
 The default public base config does not require this external checkpoint.

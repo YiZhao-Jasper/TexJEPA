@@ -1,9 +1,9 @@
-# I-JEPA base pre-training for TexJEPA.
+# I-JEPA-300 baseline pre-training for TexJEPA.
 #
-# This is the common 200-epoch base run used before any TexJEPA specialization.
-# It follows the original I-JEPA joint-embedding predictive objective with a
-# ViT-H/14 context encoder, EMA target encoder, 12-layer predictor, and
-# multi-block masking on MIMIC-CXR-JPG chest radiographs.
+# This is the public 300-epoch baseline checkpoint lineage used before any
+# TexJEPA specialization. It follows the original I-JEPA joint-embedding
+# predictive objective with a ViT-H/14 context encoder, EMA target encoder,
+# 12-layer predictor, and multi-block masking on MIMIC-CXR-JPG chest radiographs.
 
 data:
   dataset_type: mimic_cxr
@@ -22,7 +22,7 @@ data:
   color_jitter_strength: 0.0
 
 logging:
-  folder: logs/ijepa_base_200ep
+  folder: logs/ijepa_300
   write_tag: jepa
 
 mask:
@@ -47,7 +47,7 @@ meta:
 
 optimization:
   ema: [0.998, 1.0]
-  epochs: 200
+  epochs: 300
   final_lr: 1.0e-06
   final_weight_decay: 0.4
   ipe_scale: 1.25

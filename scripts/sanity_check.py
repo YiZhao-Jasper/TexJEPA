@@ -26,8 +26,8 @@ from src.vicreg_patch import vicreg_patch_loss  # noqa: E402
 
 
 EXPECTED_CONFIGS = {
-    "ijepa_base_200ep.yaml": {
-        "epochs": 200,
+    "ijepa_300.yaml": {
+        "epochs": 300,
         "model_name": "vit_huge",
         "load_checkpoint": False,
     },
@@ -79,8 +79,8 @@ def check_configs() -> None:
     tex_n = load_yaml(cfg_dir / "texjepa_n.yaml")
     tex_r = load_yaml(cfg_dir / "texjepa_r.yaml")
     tex_c = load_yaml(cfg_dir / "texjepa_c.yaml")
-    check(tex_n["meta"]["read_checkpoint"] == "../ijepa_base_200ep/jepa-latest.pth.tar",
-          "TexJEPA-N starts from the 200-epoch base checkpoint")
+    check(tex_n["meta"]["read_checkpoint"] == "../ijepa_300/jepa-latest.pth.tar",
+          "TexJEPA-N starts from the I-JEPA-300 baseline checkpoint")
     check(tex_r["meta"]["read_checkpoint"] == "../texjepa_n/jepa-latest.pth.tar",
           "TexJEPA-R starts from TexJEPA-N")
     check(tex_c["meta"]["read_checkpoint"] == "../texjepa_n/jepa-latest.pth.tar",
